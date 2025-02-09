@@ -224,10 +224,36 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSpellSlots();
     
     // Add event listener for view switching
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Setting up spell slots...');
+    // Load saved spell slots
+    loadSpellSlots();
+    
+    // Add event listener for view switching
     document.querySelectorAll('input[name="pageView"]').forEach(radio => {
         radio.addEventListener('change', (e) => {
             console.log('View switched to:', e.target.value);
             switchView(e.target.value);
         });
+    });
+
+    // Add listeners for changes that should trigger spell slot updates
+    document.getElementById('maxLevelSelect')?.addEventListener('change', () => {
+        if (currentView === 'spellSlots') {
+            renderSpellSlots();
+        }
+    });
+
+    document.getElementById('classSelect')?.addEventListener('change', () => {
+        if (currentView === 'spellSlots') {
+            renderSpellSlots();
+        }
+    });
+
+    // Add listener for when filter modal is closed with apply
+    document.getElementById('applyFilterBtn')?.addEventListener('click', () => {
+        if (currentView === 'spellSlots') {
+            renderSpellSlots();
+        }
     });
 });
