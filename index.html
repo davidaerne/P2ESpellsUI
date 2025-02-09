@@ -1,62 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>P2E Spells Database</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { theme: { extend: {} } }
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P2E Spells</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen">
-  <div class="container mx-auto px-4 py-8">
-    <!-- Header -->
-    <header class="bg-white shadow-lg rounded-lg p-4 mb-2">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <h1 class="text-2xl font-bold mb-2 sm:mb-0">P2E Spells</h1>
-        <div class="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
-          <select id="viewMode" class="w-full sm:w-48 p-2 border rounded">
-            <option value="fullList">Full Spell List</option>
-            <option value="spellSlots">Spell Slots</option>
-          </select>
+<body class="bg-gray-100 min-h-screen p-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header with Page Selector -->
+        <div class="flex items-center justify-between mb-4">
+            <h1 class="text-2xl font-bold">P2E Spells</h1>
+            <div class="flex space-x-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" name="pageView" value="spellList" class="form-radio text-blue-600" checked>
+                    <span class="ml-2">Spell List</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" name="pageView" value="spellSlots" class="form-radio text-blue-600">
+                    <span class="ml-2">Spell Slots</span>
+                </label>
+            </div>
         </div>
-      </div>
-    </header>
 
-    <!-- Spell Slot Selection (Hidden by Default) -->
-    <div id="spellSlotSection" class="hidden bg-white rounded-lg shadow p-4 mb-4">
-      <h2 class="text-xl font-semibold mb-4">Assign Spells to Slots</h2>
-      <div>
-        <label for="characterLevel" class="block mb-2">Character Level</label>
-        <select id="characterLevel" class="w-full p-2 border rounded">
-          <option value="1">Level 1</option>
-          <option value="2">Level 2</option>
-          <option value="3">Level 3</option>
-          <option value="4">Level 4</option>
-          <option value="5">Level 5</option>
-          <option value="6">Level 6</option>
-          <option value="7">Level 7</option>
-          <option value="8">Level 8</option>
-          <option value="9">Level 9</option>
-          <option value="10">Level 10</option>
-        </select>
-      </div>
-      <div id="spellSlotsContainer" class="mt-4"></div>
+        <!-- Active Filters Display -->
+        <div id="activeFilterDisplay" class="mb-4"></div>
+
+        <!-- Search Bar -->
+        <div class="mb-4">
+            <input type="text" id="searchInput" placeholder="Search spells..." 
+                   class="w-full p-2 border rounded shadow-sm">
+        </div>
+
+        <!-- Filter Button -->
+        <div class="mb-4">
+            <button id="filterBtn" 
+                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                Filters
+            </button>
+        </div>
+
+        <!-- Main Content Containers -->
+        <div id="spellContainer"></div>
+        <div id="spellSlotsContainer" class="hidden">
+            <div class="grid gap-4">
+                <!-- Spell slots will be dynamically generated here -->
+            </div>
+        </div>
+
+        <!-- Filter Modal -->
+        <div id="filterModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-lg max-w-md w-full p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold">Filter Options</h2>
+                    <button id="closeFilterBtn" class="text-gray-500 hover:text-gray-700">×</button>
+                </div>
+                <div class="space-y-4">
+                    <!-- Class Dropdown -->
+                    <div>
+                        <label for="classSelect" class="block mb-2 text-sm font-medium">Class</label>
+                        <select id="classSelect" class="w-full p-2 border rounded">
+                            <option value="All">All</option>
+                        </select>
+                    </div>
+                    <!-- Association Dropdown -->
+                    <div id="associationContainer" style="display: none;">
+                        <label for="associationSelect" class="block mb-2 text-sm font-medium">Association</label>
+                        <select id="associationSelect" class="w-full p-2 border rounded">
+                            <option value="All">All</option>
+                        </select>
+                    </div>
+                    <!-- Max Level Dropdown -->
+                    <div>
+                        <label for="maxLevelSelect" class="block mb-2 text-sm font-medium">Max Level</label>
+                        <select id="maxLevelSelect" class="w-full p-2 border rounded">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <!-- Actions Dropdown -->
+                    <div>
+                        <label for="actionsSelect" class="block mb-2 text-sm font-medium">Actions</label>
+                        <select id="actionsSelect" class="w-full p-2 border rounded">
+                            <option value="All">All</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    <!-- Range Dropdown -->
+                    <div>
+                        <label for="rangeSelect" class="block mb-2 text-sm font-medium">Range</label>
+                        <select id="rangeSelect" class="w-full p-2 border rounded">
+                            <option value="All">All</option>
+                            <option value="touch">touch</option>
+                            <option value="5 feet">5 feet</option>
+                            <option value="10 feet">10 feet</option>
+                            <option value="30 feet">30 feet</option>
+                            <option value="60 feet">60 feet</option>
+                            <option value="100 feet">100 feet</option>
+                            <option value="120 feet">120 feet</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button id="applyFilterBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        Apply
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spell Details Modal -->
+        <div id="spellModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-lg max-w-2xl w-full p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h2 id="spellTitle" class="text-xl font-bold"></h2>
+                        <p id="spellLevel" class="text-gray-600"></p>
+                    </div>
+                    <button id="closeSpellBtn" class="text-gray-500 hover:text-gray-700">×</button>
+                </div>
+                <div id="spellActions" class="mb-4"></div>
+                <div id="spellDetails"></div>
+            </div>
+        </div>
     </div>
 
-    <!-- Full Spell List -->
-    <main id="spellContainer" class="space-y-4">
-      <div class="text-center py-8 text-gray-600">Loading spells...</div>
-    </main>
-  </div>
-  <script>
-    let allSpells = [];
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      const response = await fetch("spells.json");
-      allSpells = await response.json();
-    });
-  </script>
+    <!-- Scripts -->
+    <script src="main.js"></script>
+    <script src="spellslotscript.js" defer></script>
 </body>
 </html>
