@@ -579,10 +579,19 @@ async function fetchSpells() {
 }
 
 function setupEventListeners() {
+    console.log('Setting up event listeners...');
+    
     // Filter modal events
-    document.getElementById('filterBtn')?.addEventListener('click', () => {
-        document.getElementById('filterModal').classList.remove('hidden');
-    });
+    const filterBtn = document.getElementById('filterBtn');
+    if (filterBtn) {
+        console.log('Filter button found, adding listener');
+        filterBtn.addEventListener('click', () => {
+            console.log('Filter button clicked');
+            document.getElementById('filterModal').classList.remove('hidden');
+        });
+    } else {
+        console.log('Filter button not found');
+    }
     
     document.getElementById('closeFilterBtn')?.addEventListener('click', () => {
         document.getElementById('filterModal').classList.add('hidden');
@@ -626,7 +635,9 @@ function setupEventListeners() {
             document.getElementById('filterModal')?.classList.add('hidden');
         }
     });
-        document.getElementById('activeFilterDisplay').addEventListener('click', (e) => {
+    
+    // Active filter display click events
+    document.getElementById('activeFilterDisplay')?.addEventListener('click', (e) => {
         const filterElement = e.target.closest('[data-filter]');
         if (filterElement) {
             const filterType = filterElement.getAttribute('data-filter');
@@ -643,9 +654,9 @@ function setupEventListeners() {
                     break;
             }
             
-            applyFilters(); // This will also update the active filters display
+            applyFilters();
         }
-     });
+    });
 }
 // -------------------------------
 // Initialize
