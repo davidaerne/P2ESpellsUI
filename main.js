@@ -179,7 +179,8 @@ function updateActiveFiltersDisplay() {
 
 function applyFilters() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const maxLevel = parseInt(document.getElementById('maxLevelSelect').value, 10);
+    const characterLevel = parseInt(document.getElementById('maxLevelSelect').value, 10);
+    const maxSpellLevel = getMaxSpellLevel(characterLevel);
     const actionsSelectValue = document.getElementById('actionsSelect').value;
     const rangeValue = document.getElementById('rangeSelect').value.toLowerCase();
     const selectedClass = document.getElementById('classSelect').value;
@@ -193,8 +194,9 @@ function applyFilters() {
             if (!inName && !inTraits) return false;
         }
 
-        // Level Filter
-        if (!isCantrip(spell) && getSpellLevel(spell) > maxLevel) return false;
+        // Level Filter - now uses maxSpellLevel instead of maxLevel
+        const spellLevel = getSpellLevel(spell);
+        if (!isCantrip(spell) && spellLevel > maxSpellLevel) return false;
 
         // Actions Filter
         if (actionsSelectValue !== "All") {
@@ -232,15 +234,30 @@ function applyFilters() {
                 }
             }
 
+            // First check if a specific association is selected
             if (selectedAssociation !== "all") {
-                const assocMatch = (spell.traditions || []).some(t => t.toLowerCase() === selectedAssociation) ||
-                                 (spell.traits || []).some(t => t.toLowerCase() === selectedAssociation);
-                if (!assocMatch) return false;
+                const spellTraditions = (spell.traditions || []).map(t => t.toLowerCase());
+                const spellTraits = (spell.traits || []).map(t => t.toLowerCase());
+                
+                // Check if the spell has the selected association in either traditions or traits
+                if (!spellTraditions.includes(selectedAssociation) && 
+                    !spellTraits.includes(selectedAssociation)) {
+                    return false;
+                }
             } else {
+                // If no specific association selected, check against class associations
                 if (classAssociations.length > 0) {
-                    const hasAssociation = (spell.traditions || []).some(t => classAssociations.includes(t.toLowerCase())) ||
-                                         (spell.traits || []).some(t => classAssociations.includes(t.toLowerCase()));
-                    if (!hasAssociation) return false;
+                    const spellTraditions = (spell.traditions || []).map(t => t.toLowerCase());
+                    const spellTraits = (spell.traits || []).map(t => t.toLowerCase());
+                    
+                    // Check if the spell has any of the class associations
+                    const hasMatchingAssociation = classAssociations.some(assoc => 
+                        spellTraditions.includes(assoc) || spellTraits.includes(assoc)
+                    );
+                    
+                    if (!hasMatchingAssociation) {
+                        return false;
+                    }
                 }
             }
         }
