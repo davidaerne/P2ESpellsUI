@@ -43,23 +43,9 @@ function switchView(view) {
 }
 
 // Function to render spell slots based on selected level
-function getMaxSpellLevel(characterLevel) {
-    if (characterLevel < 3) return 1;
-    if (characterLevel < 5) return 2;
-    if (characterLevel < 7) return 3;
-    if (characterLevel < 9) return 4;
-    if (characterLevel < 11) return 5;
-    if (characterLevel < 13) return 6;
-    if (characterLevel < 15) return 7;
-    if (characterLevel < 17) return 8;
-    if (characterLevel < 19) return 9;
-    return 10;
-}
-
-// Updated renderSpellSlots function
 function renderSpellSlots() {
     const container = document.getElementById('spellSlotsContainer');
-    const characterLevel = parseInt(document.getElementById('maxLevelSelect').value, 10);
+    const maxLevel = parseInt(document.getElementById('maxLevelSelect').value, 10);
     const selectedClass = document.getElementById('classSelect').value;
     
     if (selectedClass === 'All') {
@@ -67,11 +53,13 @@ function renderSpellSlots() {
         return;
     }
 
-    const progression = spellSlotsProgression[characterLevel];
-    const maxSpellLevel = getMaxSpellLevel(characterLevel);
+    // Determine caster level based on maxLevel selection
+    // In PF2e, spell level roughly corresponds to character level / 2
+    const casterLevel = Math.min(maxLevel * 2, 20);
+    const progression = spellSlotsProgression[casterLevel];
     
     if (!progression) {
-        container.innerHTML = '<div class="text-center py-4">Invalid character level.</div>';
+        container.innerHTML = '<div class="text-center py-4">Invalid caster level.</div>';
         return;
     }
 
@@ -81,7 +69,7 @@ function renderSpellSlots() {
     const cantripContainer = document.createElement('div');
     cantripContainer.className = 'mb-6';
     cantripContainer.innerHTML = `
-        <h3 class="text-lg font-semibold mb-2">Cantrips (Level ${Math.floor((characterLevel - 1) / 2)})</h3>
+        <h3 class="text-lg font-semibold mb-2">Cantrips (Level ${Math.floor((casterLevel - 1) / 2)})</h3>
         <div class="grid grid-cols-5 gap-2">
             ${Array(progression.cantrips).fill(0).map((_, i) => `
                 <button class="p-2 border rounded hover:bg-gray-100" 
@@ -94,41 +82,6 @@ function renderSpellSlots() {
         </div>
     `;
     container.appendChild(cantripContainer);
-
-    // Create spell level slots
-    progression.slots.forEach((numSlots, index) => {
-        const level = index + 1;
-        if (level <= maxSpellLevel) {  // Only show slots up to max spell level for character level
-            const levelContainer = document.createElement('div');
-            levelContainer.className = 'mb-6';
-            levelContainer.innerHTML = `
-                <h3 class="text-lg font-semibold mb-2">Level ${level} (${numSlots} slots)</h3>
-                <div class="grid grid-cols-3 gap-2">
-                    ${Array(numSlots).fill(0).map((_, i) => `
-                        <button class="p-2 border rounded hover:bg-gray-100" 
-                                onclick="openSlotModal(${level}, ${i})">
-                            ${spellSlots['slot-' + level + '-' + i] ? 
-                                `<div class="text-sm font-medium">${spellSlots['slot-' + level + '-' + i].name}</div>` :
-                                '<div class="text-sm text-gray-500">Empty Slot</div>'}
-                        </button>
-                    `).join('')}
-                </div>
-            `;
-            container.appendChild(levelContainer);
-        }
-    });
-
-    // Add note about heightening
-    const heighteningNote = document.createElement('div');
-    heighteningNote.className = 'mt-4 p-4 bg-blue-50 rounded';
-    heighteningNote.innerHTML = `
-        <p class="text-sm text-blue-800">
-            <strong>Note:</strong> In Pathfinder 2e, you can heighten spells to use higher-level spell slots. 
-            When preparing spells, you can place a lower-level spell in a higher-level slot to cast it at that higher level.
-        </p>
-    `;
-    container.appendChild(heighteningNote);
-}
 
     // Create spell level slots
     progression.slots.forEach((numSlots, index) => {
