@@ -17,24 +17,6 @@ const classData = [
     {"class": "Wizard", "traits": ["arcane"], "traditions": ["arcane"]}
 ];
 
-
-// -------------------------------
-// Helper Functions
-// -------------------------------
-function getMaxSpellLevel(characterLevel) {
-    if (characterLevel < 3) return 1;
-    if (characterLevel < 5) return 2;
-    if (characterLevel < 7) return 3;
-    if (characterLevel < 9) return 4;
-    if (characterLevel < 11) return 5;
-    if (characterLevel < 13) return 6;
-    if (characterLevel < 15) return 7;
-    if (characterLevel < 17) return 8;
-    if (characterLevel < 19) return 9;
-    return 10;
-}
-
-function isCantrip(spell) {
 // -------------------------------
 // Global Variables
 // -------------------------------
@@ -579,19 +561,10 @@ async function fetchSpells() {
 }
 
 function setupEventListeners() {
-    console.log('Setting up event listeners...');
-    
     // Filter modal events
-    const filterBtn = document.getElementById('filterBtn');
-    if (filterBtn) {
-        console.log('Filter button found, adding listener');
-        filterBtn.addEventListener('click', () => {
-            console.log('Filter button clicked');
-            document.getElementById('filterModal').classList.remove('hidden');
-        });
-    } else {
-        console.log('Filter button not found');
-    }
+    document.getElementById('filterBtn')?.addEventListener('click', () => {
+        document.getElementById('filterModal').classList.remove('hidden');
+    });
     
     document.getElementById('closeFilterBtn')?.addEventListener('click', () => {
         document.getElementById('filterModal').classList.add('hidden');
@@ -635,9 +608,7 @@ function setupEventListeners() {
             document.getElementById('filterModal')?.classList.add('hidden');
         }
     });
-    
-    // Active filter display click events
-    document.getElementById('activeFilterDisplay')?.addEventListener('click', (e) => {
+        document.getElementById('activeFilterDisplay').addEventListener('click', (e) => {
         const filterElement = e.target.closest('[data-filter]');
         if (filterElement) {
             const filterType = filterElement.getAttribute('data-filter');
@@ -654,9 +625,9 @@ function setupEventListeners() {
                     break;
             }
             
-            applyFilters();
+            applyFilters(); // This will also update the active filters display
         }
-    });
+     });
 }
 // -------------------------------
 // Initialize
