@@ -4,26 +4,26 @@ let spellSlots = {};
 
 // PF2e Spell Slot Progression
 const spellSlotsProgression = {
-    1:  { cantrips: 5, slots: [2] },
-    2:  { cantrips: 5, slots: [3] },
-    3:  { cantrips: 5, slots: [3, 2] },
-    4:  { cantrips: 5, slots: [3, 3] },
-    5:  { cantrips: 5, slots: [3, 3, 2] },
-    6:  { cantrips: 5, slots: [3, 3, 3] },
-    7:  { cantrips: 5, slots: [3, 3, 3, 2] },
-    8:  { cantrips: 5, slots: [3, 3, 3, 3] },
-    9:  { cantrips: 5, slots: [3, 3, 3, 3, 2] },
-    10: { cantrips: 5, slots: [3, 3, 3, 3, 3] },
-    11: { cantrips: 5, slots: [3, 3, 3, 3, 3, 2] },
-    12: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3] },
-    13: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 2] },
-    14: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3] },
-    15: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3, 2] },
-    16: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3, 3] },
-    17: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3, 3, 1] },
-    18: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3, 3, 1] },
-    19: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3, 3, 1] },
-    20: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3, 3, 2, 1] }
+    1:  { cantrips: 5, slots: [2] },           // Level 1: 2 1st-level
+    2:  { cantrips: 5, slots: [3] },           // Level 2: 3 1st-level
+    3:  { cantrips: 5, slots: [3, 2] },        // Level 3: 3 1st, 2 2nd
+    4:  { cantrips: 5, slots: [3, 3] },        // Level 4: 3 1st, 3 2nd
+    5:  { cantrips: 5, slots: [3, 3, 2] },     // Level 5: 3 1st, 3 2nd, 2 3rd
+    6:  { cantrips: 5, slots: [3, 3, 3] },     // Level 6: 3 1st, 3 2nd, 3 3rd
+    7:  { cantrips: 5, slots: [3, 3, 3, 2] },  // Level 7: 3 1st, 3 2nd, 3 3rd, 2 4th
+    8:  { cantrips: 5, slots: [3, 3, 3, 3] },  // Level 8: 3/3/3/3
+    9:  { cantrips: 5, slots: [3, 3, 3, 3, 2] },  // Level 9: 3/3/3/3/2
+    10: { cantrips: 5, slots: [3, 3, 3, 3, 3] },  // Level 10: 3/3/3/3/3
+    11: { cantrips: 5, slots: [3, 3, 3, 3, 3, 2] },  // Level 11
+    12: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3] },  // Level 12
+    13: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 2] },  // Level 13
+    14: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3] },  // Level 14
+    15: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3, 2] },  // Level 15
+    16: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3, 3] },  // Level 16
+    17: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3, 3, 1] },  // Level 17
+    18: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3, 3, 2] },  // Level 18
+    19: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3, 3, 3] },  // Level 19
+    20: { cantrips: 5, slots: [3, 3, 3, 3, 3, 3, 3, 3, 3, 1] }  // Level 20
 };
 
 // Function to switch between views
@@ -218,12 +218,6 @@ function loadSpellSlots() {
 }
 
 // Add event listeners when the DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('Setting up spell slots...');
-    // Load saved spell slots
-    loadSpellSlots();
-    
-    // Add event listener for view switching
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Setting up spell slots...');
     // Load saved spell slots
